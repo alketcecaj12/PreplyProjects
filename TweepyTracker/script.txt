@@ -1,0 +1,52 @@
+from tweepy import *
+import tweepy 
+import pandas as pd
+import csv
+import re 
+import string
+#import preprocessor as p
+import time 
+from datetime import datetime
+from datetime import date
+
+
+consumer_key = 'tKD3MixQODrf0Ln5wl3Pnoa5F'
+consumer_secret = 'ktNNGPINwtbNScogc1XGJbJkpper0M1pGqnDKMroNedXsmF9kJ'
+access_token = '176015580-CfmunpWnk0byn02Pyba3UlLBRDeSfX2kDnQCNb8r'
+access_token_secret = '14UtkzMAWRYCpmPWmLwdLTEI6TVoe4LzKoGv7LRgexsTf'
+
+# Twitter authentication
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)   
+auth.set_access_token(access_token, access_token_secret) 
+  
+# Creating an API object 
+api = tweepy.API(auth,  wait_on_rate_limit=True)
+
+for i in range(1000000): 
+    
+    now = datetime.now()
+    today = date.today()
+    current_time = now.strftime("%H:%M:%S")
+    current_time = current_time.replace(':', '_')
+    my_time = str(today)+" "+str(current_time)
+    print(my_time)
+
+    lista_tweet = []
+    hashtag_tweets = tweepy.Cursor(api.search, q="#quirinale", tweet_mode='extended').items(500)
+
+    for tweet in hashtag_tweets:
+        text = tweet._json["full_text"]
+        lista_tweet.append(text)
+    
+    with open(str(my_time)+'_tweets.txt','w',  encoding='utf-8') as file:
+
+        for element in lista_tweet:
+      
+            print(element)
+         
+            file.write(element)
+            file.write('\n')
+            file.write('-----------------------') 
+            file.write('\n')
+            
+    time.sleep(3600)    
